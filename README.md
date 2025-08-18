@@ -7,4 +7,4 @@ Es erlaubt GPT, Dateien zu lesen, zu aktualisieren oder GitHub Actions Workflows
 
 ## 🌐 Live Plugin-URL (für OpenAI GPT)
 
-Manifest (für OpenAI Actions):  
+Manifest (für OpenAI Actions): https://nightowle.github.io/nightowl-gpt/.well-known/ai-plugin.json 
