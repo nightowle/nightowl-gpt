@@ -1,1 +1,25 @@
-
+{
+  "schema_version": "v1",
+  "name_for_human": "NightOwl GitHub Manager",
+  "name_for_model": "nightowlGithub",
+  "description_for_human": "Verwalte GitHub-Repositories und Dateien des Nutzers nightowle direkt über GPT.",
+  "description_for_model": "Bietet GPT Zugriff auf GitHub-Repositories, Dateien und Workflows des Benutzers nightowle.",
+  "auth": {
+    "type": "oauth",
+    "client_url": "https://github.com/login/oauth/authorize",
+    "authorization_url": "https://github.com/login/oauth/access_token",
+    "scope": "repo workflow",
+    "authorization_content_type": "application/json",
+    "verification_tokens": {
+      "openai": "REPLACE_WITH_YOUR_OPENAI_VERIFICATION_TOKEN"
+    }
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://nightowle.github.io/nightowl-gpt/nightowl-gpt-openapi.yaml",
+    "is_user_authenticated": true
+  },
+  "logo_url": "https://avatars.githubusercontent.com/nightowle",
+  "contact_email": "support@nightowle.dev",
+  "legal_info_url": "https://nightowle.dev/datenschutz"
+}
