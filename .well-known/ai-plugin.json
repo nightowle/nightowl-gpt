@@ -16,8 +16,7 @@
   },
   "api": {
     "type": "openapi",
-    "url": "https://nightowle.github.io/nightowl-gpt/nightowl-gpt-openapi.yaml
-",
+    "url": "https://nightowle.github.io/nightowl-gpt/nightowl-gpt-openapi.yaml",
     "is_user_authenticated": true
   },
   "logo_url": "https://avatars.githubusercontent.com/nightowle",
