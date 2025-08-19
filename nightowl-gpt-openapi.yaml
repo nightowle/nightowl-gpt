@@ -3,6 +3,7 @@ info:
   title: NightOwl GPT API
   version: 1.0.0
   description: An API for generating responses based on a user prompt using NightOwl GPT.
+
 servers:
   - url: https://api.github.com
     description: GitHub REST API
