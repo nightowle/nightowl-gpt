@@ -1,39 +1,266 @@
 openapi: 3.1.0
 info:
-  title: NightOwl GPT API
+  title: GitHub REST API – Workflows & Issues
   version: 1.0.0
-  description: An API for generating responses based on a user prompt using NightOwl GPT.
+  description: >
+    Zugriff auf Workflows, Workflow-Runs und Issues in einem GitHub-Repository.
+    Authentifizierung erfolgt mit einem Fine-Grained GitHub Token.
 
 servers:
-  - url: http://localhost:3000
+  - url: https://api.github.com
     description: GitHub REST API
 
 paths:
-  /prompt:
+  /repos/{owner}/{repo}/actions/workflows:
+    get:
+      summary: List workflows for a repository
+      operationId: listWorkflows
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+          example: nightowle
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+          example: qr-theory-v6
+      responses:
+        '200':
+          description: A list of workflows
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: integer
+                  workflows:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        state:
+                          type: string
+                        path:
+                          type: string
+
+  /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches:
     post:
-      operationId: generatePromptResponse
-      summary: Generate a response based on a user prompt
-      description: Sends a prompt to the NightOwl GPT model and returns a generated response.
+      summary: Trigger a workflow dispatch
+      operationId: dispatchWorkflow
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+          example: nightowle
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+          example: qr-theory-v6
+        - name: workflow_id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 1234567
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - prompt
               properties:
-                prompt:
+                ref:
                   type: string
-                  description: The user's prompt to be processed by the model.
+                  example: main
+                inputs:
+                  type: object
+                  additionalProperties: true
+      responses:
+        '204':
+          description: Workflow dispatched successfully
+
+  /repos/{owner}/{repo}/actions/runs:
+    get:
+      summary: List workflow runs
+      operationId: listWorkflowRuns
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+          example: nightowle
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+          example: qr-theory-v6
       responses:
         '200':
-          description: A successful response containing the generated text.
+          description: A list of workflow runs
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  response:
+                  total_count:
+                    type: integer
+                  workflow_runs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        head_branch:
+                          type: string
+                        status:
+                          type: string
+                        conclusion:
+                          type: string
+                        created_at:
+                          type: string
+                          format: date-time
+
+  /repos/{owner}/{repo}/actions/runs/{run_id}/logs:
+    get:
+      summary: Download logs for a workflow run
+      operationId: getWorkflowRunLogs
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+          example: nightowle
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+          example: qr-theory-v6
+        - name: run_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 12345678
+      responses:
+        '200':
+          description: Workflow logs (URL or archive)
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+
+  /repos/{owner}/{repo}/issues:
+    get:
+      summary: List issues
+      operationId: listIssues
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+          example: nightowle
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+          example: qr-theory-v6
+      responses:
+        '200':
+          description: A list of issues
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    number:
+                      type: integer
+                    title:
+                      type: string
+                    state:
+                      type: string
+                    body:
+                      type: string
+
+    post:
+      summary: Create a new issue
+      operationId: createIssue
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+          example: nightowle
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+          example: qr-theory-v6
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title]
+              properties:
+                title:
+                  type: string
+                  example: New prompt from NightOwl
+                body:
+                  type: string
+                  example: Fasse die QR-Theorie in 5 Sätzen zusammen
+      responses:
+        '201':
+          description: Issue created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  number:
+                    type: integer
+                  title:
                     type: string
-                    description: The model's generated response based on the prompt.
+                  state:
+                    type: string
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: GitHub Token
+
+security:
+  - bearerAuth: []
