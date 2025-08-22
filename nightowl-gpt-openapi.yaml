@@ -4,7 +4,8 @@ info:
   version: 1.0.0
   description: >
     Zugriff auf Workflows, Workflow-Runs und Issues in einem GitHub-Repository.
-    Authentifizierung erfolgt mit einem Fine-Grained GitHub Token.
+    Authentication: Provide a GitHub fine‑grained PAT via `Authorization: Bearer <token>`.
+
 
 servers:
   - url: https://api.github.com
