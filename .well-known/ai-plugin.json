@@ -8,7 +8,10 @@
     "type": "service_http",
     "authorization_type": "bearer",
     "verification_tokens": {
-      "openai": "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"
+      "openai": "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",
+      "anthropic": "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"
+          },
+
     }
   },
   "api": {
