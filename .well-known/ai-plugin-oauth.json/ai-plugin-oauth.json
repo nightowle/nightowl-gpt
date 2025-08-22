@@ -1,0 +1,22 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "NightOwl GitHub Manager (OAuth)",
+  "name_for_model": "nightowlGithubOAuth",
+  "description_for_human": "Wie oben, aber mit OAuth-Flow.",
+  "description_for_model": "Alternative Manifest-Variante mit OAuth.",
+  "auth": {
+    "type": "oauth",
+    "client_url": "https://github.com/login/oauth/authorize",
+    "authorization_url": "https://github.com/login/oauth/access_token",
+    "scope": "repo workflow",
+    "authorization_content_type": "application/json"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://nightowle.github.io/nightowl-gpt/nightowl-gpt-openapi.yaml",
+    "is_user_authenticated": true
+  },
+  "logo_url": "https://avatars.githubusercontent.com/nightowle",
+  "contact_email": "support@nightowle.dev",
+  "legal_info_url": "https://nightowle.dev/datenschutz"
+}
