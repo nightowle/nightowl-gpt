@@ -1,0 +1,22 @@
+name: Test GitHub API auth
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/test-auth.yml'
+
+jobs:
+  test-auth:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call /rate_limit with PAT
+        env:
+          GH_PAT: ${{ secrets.BLUE_QR_AUTOMATION }}
+        run: |
+          test -n "$GH_PAT"
+          curl -fsS https://api.github.com/rate_limit \
+            -H "Authorization: Bearer $GH_PAT" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            | jq '.resources.core'
