@@ -1,11 +1,10 @@
 openapi: 3.1.0
 info:
-  title: GitHub REST API – Workflows & Issues
+  title: GitHub REST API – Workflows, Issues & Contents
   version: 1.0.0
   description: >
-    Zugriff auf Workflows, Workflow-Runs und Issues in einem GitHub-Repository.
-    Authentication: Provide a GitHub fine‑grained PAT via `Authorization: Bearer <token>`.
-
+    Zugriff auf Workflows, Workflow-Runs, Issues und Repository-Inhalte in einem GitHub-Repository.
+    Authentication: Provide a GitHub fine-grained PAT via `Authorization: Bearer <token>`.
 
 servers:
   - url: https://api.github.com
@@ -256,9 +255,148 @@ paths:
                   state:
                     type: string
 
+  /repos/{owner}/{repo}/contents/{path}:
+    get:
+      summary: Get repository content
+      operationId: getRepoContent
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: path
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Repository content metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contentResponse'
+
+    put:
+      summary: Create or update a file
+      operationId: createOrUpdateFile
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: path
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [message, content]
+              properties:
+                message:
+                  type: string
+                content:
+                  type: string
+                  description: Base64 encoded file content
+                branch:
+                  type: string
+                sha:
+                  type: string
+      responses:
+        '201':
+          description: File created or updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    $ref: '#/components/schemas/contentResponse'
+                  commit:
+                    type: object
+                    properties:
+                      sha:
+                        type: string
+                      url:
+                        type: string
+                      html_url:
+                        type: string
+                      message:
+                        type: string
+                      author:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          email:
+                            type: string
+                          date:
+                            type: string
+                      committer:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          email:
+                            type: string
+                          date:
+                            type: string
+
 components:
- 
-    schemas: {}
+  schemas:
+    contentResponse:
+      type: object
+      properties:
+        name:
+          type: string
+        path:
+          type: string
+        sha:
+          type: string
+        size:
+          type: integer
+        url:
+          type: string
+        html_url:
+          type: string
+        git_url:
+          type: string
+        download_url:
+          type: string
+        type:
+          type: string
+          enum: [file, dir]
+        content:
+          type: string
+        encoding:
+          type: string
+        _links:
+          type: object
+          properties:
+            self:
+              type: string
+            git:
+              type: string
+            html:
+              type: string
+
 securitySchemes:
     bearerAuth:
       type: http
