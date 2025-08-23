@@ -257,7 +257,9 @@ paths:
                     type: string
 
 components:
-  securitySchemes:
+ 
+    schemas: {}
+securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
