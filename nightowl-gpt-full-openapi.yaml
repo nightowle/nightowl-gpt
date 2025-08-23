@@ -84,6 +84,7 @@ paths:
                 
                 description: Response vom GitHub API
 
+
                 
         '200':
           description: Datei aktualisiert
@@ -98,6 +99,7 @@ paths:
                 
                 description: Response vom GitHub API
   # Vorhandene API-Endpunkte aus Version 1.0.0 bleiben erhalten
+  
   /repos/{owner}/{repo}/actions/workflows:
     get:
       summary: List workflows for a repository
