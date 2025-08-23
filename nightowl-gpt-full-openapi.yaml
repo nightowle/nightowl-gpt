@@ -1,0 +1,328 @@
+openapi: 3.1.0
+info:
+  title: GitHub REST API – Full Repository Management
+  version: 1.1.0
+  description: |
+    Erweiterter Zugriff auf GitHub-Repositories des Nutzers nightowle. Dieses Schema erweitert 
+    die Basis-API um Endpunkte zum Auflisten aller persönlichen Repositories sowie zum 
+    Anlegen oder Aktualisieren von Dateien in einem Repository.
+    Die bestehenden Endpunkte für Workflows und Issues aus Version 1.0.0 bleiben erhalten.
+    
+    **Authentifizierung:** Ein GitHub Fine‑Grained Personal Access Token mit passenden 
+    Rechten muss über den HTTP-Header `Authorization: Bearer <token>` bereitgestellt werden.
+servers:
+  - url: https://api.github.com
+    description: GitHub REST API
+paths:
+  /user/repos:
+    get:
+      summary: Liste alle Repositories des authentifizierten Nutzers
+      operationId: listRepos
+      responses:
+        '200':
+          description: Eine Liste von Repositories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  description: GitHub Repository Objekt
+  /repos/{owner}/{repo}/contents/{path}:
+    put:
+      summary: Erstelle oder aktualisiere eine Datei
+      operationId: createOrUpdateFile
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+          example: nightowle
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+          example: qr
+        - name: path
+          in: path
+          required: true
+          schema:
+            type: string
+          example: test.txt
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [message, content]
+              properties:
+                message:
+                  type: string
+                  description: Commit-Nachricht
+                  example: "Add new file"
+                content:
+                  type: string
+                  description: Base64-kodierter Inhalt der Datei
+                  example: "SGVsbG8gV29ybGQh"
+                branch:
+                  type: string
+                  description: Ziel-Branch
+                  default: main
+                sha:
+                  type: string
+                  description: Blob-SHA der bestehenden Datei (für Updates)
+      responses:
+        '201':
+          description: Datei erfolgreich erstellt
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Response vom GitHub API
+        '200':
+          description: Datei aktualisiert
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Response vom GitHub API
+  # Vorhandene API-Endpunkte aus Version 1.0.0 bleiben erhalten
+  /repos/{owner}/{repo}/actions/workflows:
+    get:
+      summary: List workflows for a repository
+      operationId: listWorkflows
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+          example: nightowle
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+          example: qr-theory-v6
+      responses:
+        '200':
+          description: A list of workflows
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: integer
+                  workflows:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        state:
+                          type: string
+                        path:
+                          type: string
+  /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches:
+    post:
+      summary: Trigger a workflow dispatch
+      operationId: dispatchWorkflow
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+          example: nightowle
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+          example: qr-theory-v6
+        - name: workflow_id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 1234567
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ref:
+                  type: string
+                  example: main
+                inputs:
+                  type: object
+                  additionalProperties: true
+      responses:
+        '204':
+          description: Workflow dispatched successfully
+  /repos/{owner}/{repo}/actions/runs:
+    get:
+      summary: List workflow runs
+      operationId: listWorkflowRuns
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+          example: nightowle
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+          example: qr-theory-v6
+      responses:
+        '200':
+          description: A list of workflow runs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: integer
+                  workflow_runs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        head_branch:
+                          type: string
+                        status:
+                          type: string
+                        conclusion:
+                          type: string
+                        created_at:
+                          type: string
+                          format: date-time
+  /repos/{owner}/{repo}/actions/runs/{run_id}/logs:
+    get:
+      summary: Download logs for a workflow run
+      operationId: getWorkflowRunLogs
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+          example: nightowle
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+          example: qr-theory-v6
+        - name: run_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 12345678
+      responses:
+        '200':
+          description: Workflow logs (URL or archive)
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+  /repos/{owner}/{repo}/issues:
+    get:
+      summary: List issues
+      operationId: listIssues
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+          example: nightowle
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+          example: qr-theory-v6
+      responses:
+        '200':
+          description: A list of issues
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    number:
+                      type: integer
+                    title:
+                      type: string
+                    state:
+                      type: string
+                    body:
+                      type: string
+    post:
+      summary: Create a new issue
+      operationId: createIssue
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+          example: nightowle
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+          example: qr-theory-v6
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title]
+              properties:
+                title:
+                  type: string
+                  example: New prompt from NightOwl
+                body:
+                  type: string
+                  example: Fasse die QR-Theorie in 5 Sätzen zusammen
+      responses:
+        '201':
+          description: Issue created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  number:
+                    type: integer
+                  title:
+                    type: string
