@@ -81,13 +81,21 @@ paths:
             application/json:
               schema:
                 type: object
+                
                 description: Response vom GitHub API
+
+                
         '200':
           description: Datei aktualisiert
           content:
             application/json:
+            
               schema:
+              
                 type: object
+                
+                
+                
                 description: Response vom GitHub API
   # Vorhandene API-Endpunkte aus Version 1.0.0 bleiben erhalten
   /repos/{owner}/{repo}/actions/workflows:
@@ -109,11 +117,14 @@ paths:
           example: qr-theory-v6
       responses:
         '200':
-          description: A list of workflows
-          content:
+          descr
+          iption: A list of workflows
+          cont
+          ent:
             application/json:
               schema:
                 type: object
+                
                 properties:
                   total_count:
                     type: integer
