@@ -1,20 +1,28 @@
 openapi: 3.1.0
 info:
-  title: GitHub REST API via GPT
+  title: GitHub REST API via GPT (OAuth)
   version: 1.0.0
-  description: Zugriff auf GitHub-Repositories via API-Key (bearer) für GPT Actions
+  description: Zugriff auf GitHub-Repositories via OAuth2 (authorizationCode) für GPT Actions
 
 servers:
   - url: https://api.github.com
 
 components:
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
+    GitHubOAuth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://github.com/login/oauth/authorize
+          tokenUrl: https://github.com/login/oauth/access_token
+          scopes:
+            repo: Full repository access
+            workflow: GitHub Actions workflow access
+            "user:email": User email access
+            read:org: Organization read access
 
 security:
-  - bearerAuth: []
+  - GitHubOAuth: []
 
 paths:
   /user/repos:
