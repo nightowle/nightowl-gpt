@@ -20,6 +20,7 @@ components:
             workflow: GitHub Actions workflow access
             "user:email": User email access
             read:org: Organization read access
+  schemas: {}   # <--- hinzugefügt
 
 security:
   - GitHubOAuth: []
@@ -67,7 +68,7 @@ paths:
             application/json:
               schema:
                 type: object
-                additionalProperties: true
+                properties: {}            # <--- ergänzt
 
     put:
       summary: Datei aktualisieren oder erstellen
@@ -108,7 +109,7 @@ paths:
             application/json:
               schema:
                 type: object
-                additionalProperties: true
+                properties: {}            # <--- ergänzt
 
   /repos/{owner}/{repo}/actions/workflows:
     get:
@@ -132,4 +133,4 @@ paths:
             application/json:
               schema:
                 type: object
-                additionalProperties: true
+                properties: {}            # <--- ergänzt
