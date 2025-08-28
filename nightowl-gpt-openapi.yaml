@@ -59,7 +59,6 @@ paths:
               schema:
                 type: object
 
-  /repos/{owner}/{repo}/contents/{path}:
     put:
       summary: Datei aktualisieren oder erstellen
       operationId: updateFile
@@ -95,6 +94,10 @@ paths:
       responses:
         "200":
           description: Datei erfolgreich geschrieben
+          content:
+            application/json:
+              schema:
+                type: object
 
   /repos/{owner}/{repo}/actions/workflows:
     get:
