@@ -16,13 +16,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Validate ai-plugin.json file
+        run: jsonlnt ai-plugin.json
+      - name: Validate openapi.yaml file
+        run: yamllint openapi.yaml
       - name: Prepare site
         run: |
-          mkdir -p public/.well-known
-          cp -a .well-known/* public/.well-known/
+          mkdir public/.well-known
+          cp -a .well-known/* public/
           cp nightowl-gpt-openapi.yaml public/
-      - uses: actions/upload-pages-artifact@v3
+      - name: Upload to Pages
+        uses: actions/upload-pages-artifact@v3
         with:
           path: public
   deploy:
