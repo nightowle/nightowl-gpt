@@ -1,18 +1,15 @@
 {
   "schema_version": "v1",
-  "name_for_human": "NightOwl GitHub Manager",
-  "name_for_model": "nightowlGithub",
-  "description_for_human": "Verwalte GitHub-Repositories und Dateien des Nutzers nightowle direkt über GPT.",
-  "description_for_model": "Bietet GPT Zugriff auf GitHub-Repositories, Dateien und Workflows des Benutzers nightowle.",
+  "name_for_human": "NightOwl GitHub Manager (OAuth)",
+  "name_for_model": "nightowlGithubOAuth",
+  "description_for_human": "Wie oben, aber mit OAuth-Flow.",
+  "description_for_model": "Alternative Manifest-Variante mit OAuth.",
   "auth": {
-    "type": "service_http",
-    "authorization_type": "bearer",
-    "verification_tokens": {
-      "openai": "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",
-      "anthropic": "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"
-          },
-
-    }
+    "type": "oauth",
+    "client_url": "https://github.com/login/oauth/authorize",
+    "authorization_url": "https://github.com/login/oauth/access_token",
+    "scope": "repo workflow",
+    "authorization_content_type": "application/json"
   },
   "api": {
     "type": "openapi",
