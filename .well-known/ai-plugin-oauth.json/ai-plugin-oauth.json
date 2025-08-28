@@ -9,7 +9,7 @@
     "client_url": "https://github.com/login/oauth/authorize",
     "authorization_url": "https://github.com/login/oauth/access_token",
     "scope": "repo workflow",
-    "authorization_content_type": "application/json"
+    "authorization_content_type": "application/x-www-form-urlencoded"
   },
   "api": {
     "type": "openapi",
