@@ -1,0 +1,20 @@
+name: Links & Security Check
+on:
+  workflow_dispatch:
+    push:
+      branches: [ main ]
+      paths: ['public/']
+permissions:
+  contents: read
+  website: read
+
+jobs:
+  link-security:
+    runs-on: ubuntu-latest
+    env:
+      LINK_WEB: https://nightowle.github.io/nightowl-gpt/
+    steps:
+      - name: Craw HTTL links
+        run: htmlchecker public/ -i
+      - name: CSP header test
+        run: curl -H 'Content-Security-Policy': ' "$LINK_WEB" -v
