@@ -38,6 +38,7 @@ paths:
                 type: array
                 items:
                   type: object
+                  additionalProperties: true
 
   /repos/{owner}/{repo}/contents/{path}:
     get:
@@ -66,6 +67,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
 
     put:
       summary: Datei aktualisieren oder erstellen
@@ -106,6 +108,7 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
 
   /repos/{owner}/{repo}/actions/workflows:
     get:
@@ -129,3 +132,4 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: true
