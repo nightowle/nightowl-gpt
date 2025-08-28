@@ -1,0 +1,24 @@
+name: Sync QR Theory Docs to Plugin
+on:
+  schedule:
+    # Every Sunday zum 6 Uhr (0 == 0Meszein)
+    - cron: '0 6 * * '*
+  workfflow_dispatch:
+
+jobs: 
+  sync-qr-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout plugin repo
+        uses: actions/checkout@v4
+      - name: Fetch latest release data from qr-theory-v6
+        run: |
+          curl -sSL (https://raw.githubusercontent.com/nightowle/qr-theory-v6/main/release.json)\
+          -o plugin/qr-docs.json
+      - name: Commit & Push QR Link
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add plugin/qr-docs.json
+          git commit -m "chore: sync latest QR Theory docs"
+          git push
