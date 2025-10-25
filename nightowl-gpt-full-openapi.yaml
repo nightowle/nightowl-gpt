@@ -143,6 +143,73 @@ paths:
                           type: string
                         path:
                           type: string
+  /repos/{owner}/{repo}/hooks:
+    post:
+      summary: Create a repository webhook (e.g., Zapier)
+      operationId: createRepositoryWebhook
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+          example: nightowle
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+          example: qr-theory-v6
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - config
+              properties:
+                name:
+                  type: string
+                  description: Webhook type, defaults to "web"
+                  default: web
+                active:
+                  type: boolean
+                  description: Whether the webhook is enabled
+                  default: true
+                events:
+                  type: array
+                  items:
+                    type: string
+                  description: Event list triggering the webhook
+                  default:
+                    - push
+                config:
+                  type: object
+                  description: Configuration for the webhook target
+                  required:
+                    - url
+                  properties:
+                    url:
+                      type: string
+                      description: Destination URL such as a Zapier catch hook
+                    content_type:
+                      type: string
+                      description: Payload content type (e.g., json)
+                      default: json
+                    secret:
+                      type: string
+                      description: Optional secret for payload signature verification
+                    insecure_ssl:
+                      type: string
+                      description: "1" to disable SSL verification, otherwise "0"
+      responses:
+        '201':
+          description: Webhook created successfully
+          content:
+            application/json:
+              schema:
+                type: object
   /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches:
     post:
       summary: Trigger a workflow dispatch
