@@ -134,3 +134,66 @@ paths:
               schema:
                 type: object
                 properties: {}            # <--- ergänzt
+
+  /repos/{owner}/{repo}/hooks:
+    post:
+      summary: Erstelle GitHub Webhook (z. B. für Zapier)
+      operationId: createWebhook
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: repo
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [config]
+              properties:
+                name:
+                  type: string
+                  description: Webhook-Typ, standardmäßig "web"
+                  default: web
+                active:
+                  type: boolean
+                  description: Ob der Webhook aktiviert sein soll
+                  default: true
+                events:
+                  type: array
+                  items:
+                    type: string
+                  description: Liste der auslösenden Events (z. B. push)
+                  default:
+                    - push
+                config:
+                  type: object
+                  description: Webhook-Konfiguration mit Ziel-URL
+                  properties:
+                    url:
+                      type: string
+                      description: Ziel-URL, z. B. Zapier Catch Hook
+                    content_type:
+                      type: string
+                      description: MIME-Typ des Payloads
+                      default: json
+                    secret:
+                      type: string
+                      description: Optionales Secret zur Signaturprüfung
+                    insecure_ssl:
+                      type: string
+                      description: "1" für unsichere SSL-Verbindungen, sonst "0"
+      responses:
+        "201":
+          description: Webhook erstellt
+          content:
+            application/json:
+              schema:
+                type: object
